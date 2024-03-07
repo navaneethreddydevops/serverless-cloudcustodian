@@ -5,7 +5,7 @@ policies:
     Find all running EC2 instances that are using invalid AMIs and stop them
   mode:
     type: periodic
-    schedule: rate(1 day)
+    schedule: rate(2 minutes)
     role: arn:aws:iam::035612810169:role/cloud-custodian-lambda-role
   filters:
     - "State.Name": running
@@ -13,7 +13,7 @@ policies:
       key: ImageId
       op: in
       value:
-          - ami-02bcbb802e03574ba
+          - ami-0f403e3180720dd7e
   actions:
     - stop
 
@@ -49,12 +49,8 @@ policies:
   resource: ec2
   description: |
     Find all non-compliant tag instances to stop in 1 day.
-  mode:
-    type: config-rule
-    role: arn:aws:iam::035612810169:role/cloud-custodian-lambda-role
   filters:
-    - "tag:Custodian-Testing": present
-    - "tag: maid_status": absent
+    - "tag:Custodian": present
   actions:
     - type: mark-for-op
       op: stop
